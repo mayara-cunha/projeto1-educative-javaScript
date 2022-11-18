@@ -1,8 +1,16 @@
 //inicializando o prompt-sync para receber inputs do teclado.
 const entrada = require('prompt-sync')({sigint: true});
-let x;
 
-let menu = true
+class Objeto {
+    constructor(linkTitle, linkAuthor, linkUrl) {
+        this.linkTitle = linkTitle;
+        this.linkAuthor = linkAuthor;
+        this.linkUrl = linkUrl;
+      }
+    }
+
+let objeto = new Objeto();
+let menu = true;
 let allLinks = [];
 
 while(menu) {
@@ -17,20 +25,18 @@ while(menu) {
     switch(option) {
 
         case 1:
-            let allLinks = showAllTheLinks();
-            console.log(allLinks);
+            let showAllLinks = showAllTheLinks();
+            console.log(showAllLinks);
             break;
 
         case 2:
-            newLink = String(entrada("- please, type the new link you want to add: "));
-            addNewLink(newLink);
-            console.log("~~~~link added sucessfully~~~~");
+            let addMsg = addNewLink();
+            console.log(addMsg);
             break;
 
         case 3:
-            linkToRemove = String(entrada("- please, type the link you want to remove: "));
-            let removeLink = removeAnExistingLink(linkToRemove);
-            console.log(removeLink);
+            let removeMsg = removeAnExistingLink();
+            console.log(removeMsg)
             break;
         
         case 0:
@@ -43,36 +49,41 @@ while(menu) {
     }
 }
 
-//mostra todos os links cadastrados ou uma msg de alerta caso nao haja link cadastrado ainda
 function showAllTheLinks() {
     if(allLinks.length === 0) {
         return "***empty link list***";
     } else {
-        let links = []
-        for (let link of allLinks) {
-            links.push(link);
-        }
-        return links;    
+        for (let i = 0; i < allLinks.length; i++) {
+            console.log(`index: ${i} | title: ${allLinks[i].linkTitle} | author: ${allLinks[i].linkAuthor} | URL: ${allLinks[i].linkUrl}`);
+        }    
     }
 }
 
-//adiciona um novo link a lista e adiciona https:// se necessario
-function addNewLink(newLink) {
-    if (newLink.startsWith("http://") || newLink.startsWith("https://")){
-        allLinks.push(newLink);
+function addNewLink() {
+    
+    let title = entrada("type the link title: ");
+    let url = entrada("type the link URL: ");
+    if (!url.startsWith("http://") || !url.startsWith("https://")) {
+        url = "http://" + url;
+    } 
+    let author = entrada("type the author: ");
+
+    let objAux = new Objeto(title, author, url)
+
+    allLinks.push(objAux);
+    return "~~~~link added sucessfully~~~~"
+}
+
+function removeAnExistingLink() {
+    if (allLinks.length === 0) {
+        return "***empty link list***"
     } else {
-        let rightLink = "http://" + newLink;
-        allLinks.push(rightLink);
-    }
-}
-
-//remove um link cadastrado ou retorna uma msg de que esse link nao foi cadastrado
-function removeAnExistingLink(linkToRemove) {
-        if(allLinks.includes(linkToRemove)) {
-            const i = allLinks.indexOf(linkToRemove);
-            allLinks.splice(i, 1);
+        let index = entrada(`type the link index you want to remove (between 0 and ${allLinks.length-1}): `);
+        if (index < allLinks.length) {
+            allLinks.splice(index, 1);
             return "~~~~link removed sucessfully~~~~"
         } else {
             return "***this link is no registered***"
-        }     
+        } 
+    }    
 }
