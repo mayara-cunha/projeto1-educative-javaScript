@@ -28,13 +28,9 @@ while(menu) {
             break;
 
         case 3:
-            if(allLinks.length === 0) {
-                return "***empty link list***";
-            } else {
-                linkToRemove = String(entrada("- please, type the link you want to remove: "));
-                let removeLink = removeAnExistingLink(linkToRemove);
-                console.log(removeLink);
-            }
+            linkToRemove = String(entrada("- please, type the link you want to remove: "));
+            let removeLink = removeAnExistingLink(linkToRemove);
+            console.log(removeLink);
             break;
         
         case 0:
